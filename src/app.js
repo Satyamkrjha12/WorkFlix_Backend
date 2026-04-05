@@ -12,7 +12,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://workflixwebapp.netlify.app"
+    "https://workflixwebapp.netlify.app",
+    "https://workflix-frontend.onrender.com/"
   ],
   credentials: true
 }));
