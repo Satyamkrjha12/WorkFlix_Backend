@@ -9,12 +9,14 @@ const proposalRoute = require("./routes/proposal.routes");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://workflixwebapp.netlify.app"
+  ],
+  credentials: true
+}));
+
 app.use(cookieParser());
 app.use(express.json());
 
