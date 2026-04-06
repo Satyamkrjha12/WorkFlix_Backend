@@ -27,6 +27,7 @@ exports.register = async (req, res) => {
     httpOnly: true,              // JS cannot access
     secure: true,               // true in production (HTTPS)
     sameSite: "none",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
@@ -62,6 +63,7 @@ exports.login = async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -84,6 +86,10 @@ exports.profile = async (req, res) => {
 
 /* ================= LOGOUT (OPTIONAL) ================= */
 exports.logout = async (req, res) => {
-  res.clearCookie("token");
-  res.json({ message: "Logged out successfully" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  }); res.json({ message: "Logged out successfully" });
 };
