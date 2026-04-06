@@ -28,6 +28,7 @@ exports.register = async (req, res) => {
     secure: true,               // true in production (HTTPS)
     sameSite: "none",
     path: "/",
+    domain: ".onrender.com",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
@@ -64,6 +65,7 @@ exports.login = async (req, res) => {
     secure: true,
     sameSite: "none",
     path: "/",
+    domain: ".onrender.com",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -91,5 +93,6 @@ exports.logout = async (req, res) => {
     secure: true,
     sameSite: "none",
     path: "/",
+    domain: ".onrender.com",
   }); res.json({ message: "Logged out successfully" });
 };
