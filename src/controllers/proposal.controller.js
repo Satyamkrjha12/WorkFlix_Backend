@@ -1,5 +1,73 @@
 const mongoose = require("mongoose");
 const Proposal = require("../models/Proposal.model");
+const Gig = require("../models/Gig.model");
+const Notification = require("../models/Notification.model");
+
+exports.updateProposalStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!["accepted", "rejected"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status",
+      });
+    }
+
+    const proposal = await Proposal.findById(id).populate("gigId");
+
+    if (!proposal) {
+      return res.status(404).json({
+        success: false,
+        message: "Proposal not found",
+      });
+    }
+
+    // Verify the gig belongs to the logged in user (the client)
+    if (proposal.gigId.postedBy.toString() !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this proposal",
+      });
+    }
+
+    proposal.status = status;
+    await proposal.save();
+
+    if (status === "accepted") {
+      // Reject other pending proposals
+      await Proposal.updateMany(
+        { gigId: proposal.gigId._id, _id: { $ne: proposal._id }, status: "pending" },
+        { status: "rejected" }
+      );
+
+      // Notify the freelancer
+      await Notification.create({
+        userId: proposal.userId,
+        message: `Congratulations! Your proposal for the gig "${proposal.gigId.title}" has been accepted.`,
+      });
+    } else if (status === "rejected") {
+      // Notify the freelancer
+      await Notification.create({
+        userId: proposal.userId,
+        message: `Your proposal for the gig "${proposal.gigId.title}" has been rejected.`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Proposal ${status} successfully`,
+      data: proposal,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update proposal status",
+      error: error.message,
+    });
+  }
+};
 
 
 exports.createProposal = async (req, res) => {

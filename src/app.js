@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.routes");
 const gigRoute = require("./routes/gig.routes");
 const proposalRoute = require("./routes/proposal.routes");
+const notificationRoute = require("./routes/notification.routes");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/api/gig", gigRoute);
 app.use("/api/auth", authRoutes);
 app.use("/api/proposal", proposalRoute);
+app.use("/api/notification", notificationRoute);
 
 app.get("/", (req, res) => {
   res.send("API running...");
