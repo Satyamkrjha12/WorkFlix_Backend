@@ -12,7 +12,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 app.use(cors({
-  origin: "https://workflix-frontend.onrender.com",
+  origin: "https://workflixwebapp.netlify.app/",
   credentials: true
 }));
 
